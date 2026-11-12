@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Контрольна робота № 2 — Хімічні реакції</title>
+<style>
+:root{--bg:#f6f8fb;--card:#fff;--tx:#14213d;--mu:#4a5a73;--ac:#1d4ed8;--acl:#dbe7ff;--ok:#15803d;--bad:#b91c1c;--wa:#b45309;--bd:#cdd7e6;color-scheme:light}
+*{box-sizing:border-box}html{font-size:16px}
+
+/* Захист від виділення тексту */
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--tx);
+  font-family:"Segoe UI",Roboto,Arial,sans-serif;
+  line-height:1.4;
+  padding:0 0 70px 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+header{background:var(--card);border-bottom:1px solid var(--bd);padding:.5rem 1rem;display:flex;justify-content:space-between;align-items:center}
+header small{color:var(--mu);font-size:.75rem}header h1{margin:0;font-size:1.05rem}
+main{max-width:860px;margin:0 auto;padding:.8rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1rem;box-shadow:0 2px 6px #1e3a8a0d;margin-bottom:.8rem}
+h2{margin:.1rem 0 .4rem;font-size:1.2rem}.mu{color:var(--mu)}
+label{display:block;font-weight:600;margin:.6rem 0 .2rem;font-size:.9rem}
+input[type=text],select,input[type=number]{width:100%;font:inherit;padding:.5rem .7rem;border:1.5px solid var(--bd);border-radius:8px;background:#fff;color:var(--tx);user-select:text;-webkit-user-select:text}
+input:focus,select:focus{outline:2px solid var(--acl);border-color:var(--ac)}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:.55rem 1.1rem;cursor:pointer;background:var(--ac);color:#fff}
+button.sec{background:var(--acl);color:var(--ac)}button:disabled{opacity:.4;cursor:default}
+.warn{background:#fff7e6;border:1px solid #f5c26b;border-radius:10px;padding:.7rem .9rem;margin-top:.8rem;font-size:.85rem}
+.crit-box{background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;padding:.8rem;margin:.8rem 0;font-size:.85rem}
+.crit-box h3{margin:0 0 .4rem;font-size:1rem;color:var(--ac)}
+.crit-table{width:100%;border-collapse:collapse;margin-top:.4rem;font-size:.8rem}
+.crit-table th,.crit-table td{border:1px solid var(--bd);padding:.3rem .5rem;text-align:left}
+.crit-table th{background:var(--acl);color:var(--ac)}
+#stepper{display:flex;flex-wrap:wrap;gap:.3rem;margin:.4rem 0 0}
+#stepper button{width:2.2rem;height:2.2rem;padding:0;background:#fff;color:var(--tx);border:1.5px solid var(--bd);border-radius:6px;font-size:.85rem}
+#stepper .done{background:var(--acl);border-color:var(--ac)}#stepper .cur{background:var(--ac);color:#fff;border-color:var(--ac)}
+.opt{display:flex;gap:.6rem;align-items:flex-start;padding:.55rem .8rem;border:1.5px solid var(--bd);border-radius:10px;margin:.4rem 0;cursor:pointer;background:#fff;font-size:.95rem}
+.opt:hover{border-color:var(--ac)}.opt.sel{background:var(--acl);border-color:var(--ac)}
+.opt input{width:1.1rem;height:1.1rem;margin-top:.15rem;accent-color:var(--ac)}
+.q{font-size:1.05rem;font-weight:600;margin-bottom:.6rem}.pts{color:var(--mu);font-size:.8rem;font-weight:400}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;align-items:center;margin:.4rem 0;font-size:.9rem}
+@media(max-width:650px){.row{grid-template-columns:1fr}}
+.nav{display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.hid{display:none!important}
+.modal{position:fixed;inset:0;background:#0f172a88;display:flex;align-items:center;justify-content:center;padding:1rem;z-index:99}
+.modal .card{max-width:440px;margin:0}
+.res{border-left:5px solid var(--bd);padding:.5rem .8rem;margin:.5rem 0;background:#fafcff;border-radius:0 8px 8px 0;font-size:.85rem}
+.res.ok{border-color:var(--ok)}.res.no{border-color:var(--bad)}.res.part{border-color:var(--wa)}
+.bl{display:flex;justify-content:space-between;padding:.25rem 0;border-bottom:1px solid var(--bd);font-size:.9rem}.big{font-size:2.2rem;font-weight:800;color:var(--ac)}
+
+/* Floating Calculator Widget */
+#calc-widget{position:fixed;bottom:.8rem;right:.8rem;z-index:90;background:var(--card);border:2px solid var(--ac);border-radius:14px;box-shadow:0 4px 16px #00000020;width:250px;overflow:hidden;transition:transform .25s ease}
+#calc-widget.collapsed{transform:translateY(calc(100% - 38px))}
+.calc-head{background:var(--ac);color:#fff;padding:.45rem .8rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;font-size:.85rem}
+.calc-body{padding:.6rem}
+.calc-screen{width:100%;height:36px;background:#f1f5f9;border:1px solid var(--bd);border-radius:6px;text-align:right;padding:.3rem .6rem;font-size:1rem;font-family:monospace;font-weight:700;margin-bottom:.6rem;color:var(--tx);overflow:hidden;word-break:break-all}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.3rem}
+.calc-grid button{padding:.45rem 0;font-size:.9rem;border-radius:6px;background:#e2e8f0;color:var(--tx);border:0}
+.calc-grid button.op{background:var(--acl);color:var(--ac)}
+.calc-grid button.eq{background:var(--ac);color:#fff;grid-column:span 2}
+.calc-grid button.c{background:#fee2e2;color:var(--bad)}
+
+.step-card{background:#f8fafc;border:1px solid var(--bd);border-radius:8px;padding:.6rem .8rem;margin-top:.5rem}
+.step-card label{margin:0 0 .2rem;font-size:.85rem;color:var(--mu)}
+
+/* Таблиця розчинності */
+#sol .card{max-width:980px;width:100%;max-height:92vh;display:flex;flex-direction:column;margin:0}
+#sol .sol-top{display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-bottom:.4rem}
+#sol .sol-top h2{margin:0;font-size:1.05rem}
+.sol-wrap{overflow:auto;border:1px solid var(--bd);border-radius:8px;flex:1;min-height:0}
+.sol-table{border-collapse:separate;border-spacing:0;font-size:.8rem;text-align:center;width:100%}
+.sol-table th,.sol-table td{border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:.28rem .4rem;white-space:nowrap}
+.sol-table thead th{position:sticky;top:0;background:var(--acl);color:var(--ac);z-index:2}
+.sol-table tbody th{position:sticky;left:0;background:var(--acl);color:var(--ac);z-index:1;text-align:left}
+.sol-table thead th:first-child{left:0;z-index:3}
+.sol-table td{font-weight:700}
+.sol-table td.r{background:#dcfce7;color:#166534}
+.sol-table td.m{background:#fef3c7;color:#92400e}
+.sol-table td.n{background:#fee2e2;color:#991b1b}
+.sol-table td.x{background:#f1f5f9;color:var(--mu)}
+.sol-legend{font-size:.78rem;margin:.5rem 0 0;color:var(--mu)}
+@media print{header,.noprint,#calc-widget,#sol{display:none!important}body{background:#fff}.card{box-shadow:none;border:0;padding:0}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <small>Харківський машинобудівний фаховий коледж</small>
+    <h1>Контрольна робота № 2 · Хімічні реакції</h1>
+  </div>
+  <b id="tm" class="hid" style="font-size:1.2rem;color:var(--ac)"></b>
+</header>
+
+<main>
+  <div id="login" class="card">
+    <h2>Тематичний контроль № 2</h2>
+    <p class="mu" style="font-size:.85rem;margin-bottom:.4rem">Швидкість хімічних реакцій · Хімічна рівновага · Реакції йонного обміну · Гідроліз солей</p>
+    
+    <div class="crit-box">
+      <h3>📋 Критерії оцінювання та структура роботи</h3>
+      <ul style="margin:0 0 .5rem 1.2rem;padding:0">
+        <li><b>Всього питань:</b> 26 (Максимум — <b>48.5 первинних балів</b>).</li>
+        <li><b>Тести (1 відповідь):</b> 1.5 бала. | <b>Відповідності:</b> 1.5 – 3 бали.</li>
+        <li><b>Розрахунові задачі (покрокові):</b> по 2 бали (автоперевірка кожного кроку).</li>
+        <li><b>Штраф за втрату фокусу (перемикання вкладок):</b> <b>−0.5 бала</b> за кожен випадок.</li>
+        <li><b>Час виконання:</b> 60 хвилин. Калькулятор у правому нижньому кутку.</li>
+      </ul>
+      <table class="crit-table">
+        <thead>
+          <tr><th>% виконання</th><th>0–15%</th><th>16–25%</th><th>26–35%</th><th>36–45%</th><th>46–55%</th><th>56–65%</th><th>66–75%</th><th>76–83%</th><th>84–90%</th><th>91–96%</th><th>97–100%</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Оцінка (12б)</b></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11–12</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <label>Прізвище та ім’я</label>
+    <input type="text" id="name" placeholder="напр. Коваленко Олександр">
+    
+    <label>Група</label>
+    <input type="text" id="group" placeholder="напр. М-21">
+    
+    <label>Варіант</label>
+    <select id="vsel">
+      <option value="0">Автоматично за прізвищем</option>
+      <option value="1">Варіант № 1</option><option value="2">Варіант № 2</option><option value="3">Варіант № 3</option>
+      <option value="4">Варіант № 4</option><option value="5">Варіант № 5</option><option value="6">Варіант № 6</option>
+      <option value="7">Варіант № 7</option><option value="8">Варіант № 8</option><option value="9">Варіант № 9</option>
+      <option value="10">Варіант № 10</option><option value="11">Варіант № 11</option><option value="12">Варіант № 12</option>
+      <option value="13">Варіант № 13</option><option value="14">Варіант № 14</option><option value="15">Варіант № 15</option>
+      <option value="16">Варіант № 16</option><option value="17">Варіант № 17</option><option value="18">Варіант № 18</option>
+      <option value="19">Варіант № 19</option><option value="20">Варіант № 20</option><option value="21">Варіант № 21</option>
+      <option value="22">Варіант № 22</option><option value="23">Варіант № 23</option><option value="24">Варіант № 24</option>
+      <option value="25">Варіант № 25</option>
+    </select>
+    
+    <div class="warn">⚠️ Не згортайте браузер і не перемикайте вкладки під час тесту!</div>
+    <p style="margin-top:.8rem"><button type="button" id="start-btn">Розпочати →</button></p>
+  </div>
+
+  <div id="exam" class="card hid">
+    <div class="nav" style="align-items:center"><b id="vtag" style="font-size:.9rem"></b><span id="cnt" class="mu" style="font-size:.85rem"></span><button type="button" class="sec" id="sol-btn" style="padding:.3rem .7rem;font-size:.8rem">🧪 Таблиця розчинності</button></div>
+    <div id="stepper"></div>
+    <hr style="border:0;border-top:1px solid var(--bd);margin:.6rem 0">
+    <div id="task"></div>
+    <div class="nav" style="margin-top:1rem">
+      <button class="sec" id="prev">← Назад</button>
+      <button id="next">Далі →</button>
+      <button id="fin" class="hid">Завершити ✔</button>
+    </div>
+  </div>
+
+  <div id="rep" class="card hid">
+    <div id="pdf-content">
+      <p class="mu" style="margin:0;font-size:.8rem">Харківський машинобудівний фаховий коледж</p>
+      <h2>Протокол виконання контрольної роботи № 2</h2>
+      <div id="meta" class="mu" style="font-size:.85rem"></div>
+      <div class="big" id="grade"></div>
+      <div id="calc" class="mu" style="font-size:.85rem"></div>
+      <div id="det" style="margin-top:.8rem"></div>
+    </div>
+    
+    <p class="noprint" style="margin-top:1rem">
+      <button onclick="window.print()">📄 Зберегти протокол у PDF / Друк</button>
+    </p>
+  </div>
+</main>
+
+<!-- Calculator Widget -->
+<div id="calc-widget" class="collapsed">
+  <div class="calc-head" id="calc-head-btn">
+    <span>🧮 Калькулятор</span>
+    <span id="calc-toggle-icon">▲</span>
+  </div>
+  <div class="calc-body">
+    <div id="calc-screen" class="calc-screen">0</div>
+    <div class="calc-grid">
+      <button class="c" onclick="calcClear()">C</button>
+      <button class="op" onclick="calcInput('(')">(</button>
+      <button class="op" onclick="calcInput(')')">)</button>
+      <button class="op" onclick="calcInput('/')">/</button>
+      <button onclick="calcInput('7')">7</button>
+      <button onclick="calcInput('8')">8</button>
+      <button onclick="calcInput('9')">9</button>
+      <button class="op" onclick="calcInput('*')">*</button>
+      <button onclick="calcInput('4')">4</button>
+      <button onclick="calcInput('5')">5</button>
+      <button onclick="calcInput('6')">6</button>
+      <button class="op" onclick="calcInput('-')">-</button>
+      <button onclick="calcInput('1')">1</button>
+      <button onclick="calcInput('2')">2</button>
+      <button onclick="calcInput('3')">3</button>
+      <button class="op" onclick="calcInput('+')">+</button>
+      <button onclick="calcInput('0')">0</button>
+      <button onclick="calcInput('.')">.</button>
+      <button class="eq" onclick="calcEval()">=</button>
+    </div>
+  </div>
+</div>
+
+<div id="sm" class="modal hid">
+  <div class="card">
+    <h2>⚠️ Втрату фокусу зафіксовано</h2>
+    <p style="font-size:.9rem">Штраф <b>−0,5 бала</b>. Залишайтеся на сторінці контрольної.</p>
+    <button id="sm-btn">Зрозуміло</button>
+  </div>
+</div>
+
+<div id="sol" class="modal hid">
+  <div class="card">
+    <div class="sol-top">
+      <h2>🧪 Таблиця розчинності кислот, основ і солей у воді</h2>
+      <button type="button" class="sec" id="sol-close">Закрити ✕</button>
+    </div>
+    <div class="sol-wrap"><table class="sol-table" id="sol-table"></table></div>
+    <p class="sol-legend"><b>Р</b> — розчинна · <b>М</b> — малорозчинна · <b>Н</b> — нерозчинна · <b>—</b> — не існує або повністю гідролізує у воді</p>
+  </div>
+</div>
+
+<div id="cm" class="modal hid">
+  <div class="card">
+    <h2>Завершити роботу?</h2>
+    <p style="font-size:.9rem">Після підтвердження змінити відповіді буде неможливо.</p>
+    <div class="nav">
+      <button class="sec" id="cm-cancel">Повернутись</button>
+      <button id="cm-confirm">Так, завершити</button>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  const $=id=>document.getElementById(id);
+  const e=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+  const RT=["Збільшує швидкість","Зменшує швидкість","Не змінює швидкість"];
+  const SH=["Вправо (→)","Вліво (←)","Не зміщується"];
+  const CL=["Посилюється","Слабшає","Не змінюється"];
+  const HY=["Не гідролізує, pH ≈ 7","За катіоном, pH < 7","За аніоном, pH > 7"];
+  const BL=["Швидкість реакцій","Хімічна рівновага","Реакції йонного обміну","Гідроліз солей"];
+
+  const S=(q,o,a)=>({q,o,a});
+  const N=(q,steps)=>({q,steps});
+  const X=(h,r,o)=>({h,r,o});
+
+  const T=[
+  {b:0,p:1.5,t:"s",v:[S("У двох пробірках з однаковою HCl: цинкова гранула і цинковий порошок тієї ж маси. Де швидше виділяється H₂ і чому?",["У другій — більша площа поверхні контакту","У першій — менша площа поверхні","Однаково — маса однакова","У першій — вища концентрація HCl"],0),S("Розклад H₂O₂ різко прискорюється після додавання MnO₂. Яка роль MnO₂?",["Реагент, повністю витрачається","Каталізатор — знижує енергію активації","Інгібітор","Збільшує концентрацію H₂O₂"],1),S("Чому магній реагує з HCl бурхливо, а залізо повільно (однакові умови)?",["Різна природа реагентів (активність металів)","Різний тиск","Різна колба","Різний колір"],0)]},
+  {b:0,p:1.5,t:"n",v:[
+    N("Концентрація А зменшилась з 1,2 до 0,4 моль/л за 40 с. Знайдіть зміну концентрації ΔC та середню швидкість реакції v.", [{lbl:"1) Зміна концентрації ΔC (моль/л):",a:0.8},{lbl:"2) Середня швидкість v (моль/(л·с)):",a:0.02}]),
+    N("Концентрація А зменшилась з 2,0 до 0,8 моль/л за 30 с. Знайдіть зміну концентрації ΔC та середню швидкість реакції v.", [{lbl:"1) Зміна концентрації ΔC (моль/л):",a:1.2},{lbl:"2) Середня швидкість v (моль/(л·с)):",a:0.04}]),
+    N("Концентрація А зменшилась з 1,8 до 0,6 моль/л за 60 с. Знайдіть зміну концентрації ΔC та середню швидкість реакції v.", [{lbl:"1) Зміна концентрації ΔC (моль/л):",a:1.2},{lbl:"2) Середня швидкість v (моль/(л·с)):",a:0.02}])
+  ]},
+  {b:0,p:2,t:"n",v:[
+    N("γ = 2. При 20 °C реакція завершується за 8 хв. Обчисліть фактор прискорення та час завершення при 40 °C (хв).", [{lbl:"1) Фактор зміни швидкості (у скільки разів зросте v):",a:4},{lbl:"2) Час завершення реакції при 40 °C (хв):",a:2}]),
+    N("γ = 3. При 30 °C реакція триває 27 хв. Обчисліть фактор прискорення та час тривалості при 60 °C (хв).", [{lbl:"1) Фактор зміни швидкості (у скільки разів зросте v):",a:27},{lbl:"2) Час тривалості при 60 °C (хв):",a:1}]),
+    N("γ = 2. При 10 °C реакція триває 32 хв. Обчисліть фактор прискорення та час при 40 °C (хв).", [{lbl:"1) Фактор зміни швидкості (у скільки разів зросте v):",a:8},{lbl:"2) Час тривалості при 40 °C (хв):",a:4}])
+  ]},
+  {b:0,p:2,t:"n",v:[
+    N("v = k·[A]²·[B]. [A] збільшили у 3 рази, [B] — у 2 рази. Обчисліть фактор для [A]² та підсумкове зростання швидкості.", [{lbl:"1) Вплив компонента A (фактор [A]²):",a:9},{lbl:"2) Загальне зростання швидкості (у разів):",a:18}]),
+    N("2NO + O₂ → 2NO₂ (газова). Тиск збільшили у 2 рази. Обчисліть збільшення концентрації кожного газу та підсумкове прискорення.", [{lbl:"1) Фактор збільшення концентрації кожного газу:",a:2},{lbl:"2) Загальне зростання швидкості реакції (у разів):",a:8}]),
+    N("v = k·[A]·[B]². [A] збільшили у 2 рази, [B] зменшили у 2 рази. Обчисліть фактор для [B]² та остаточну зміну v.", [{lbl:"1) Фактор зміни компонента [B]²:",a:0.25},{lbl:"2) Підсумковий коефіцієнт зміни швидкості:",a:0.5}])
+  ]},
+  {b:0,p:2,t:"x",v:[X("Як вплине зміна на швидкість реакції Zn + 2HCl → ZnCl₂ + H₂ (розчин)?",[["Нагрівання",0],["Розведення кислоти водою",1],["Додавання NaCl, що не бере участі",2]],RT),X("Як вплине зміна на швидкість CaCO₃(тв) + 2HCl → …?",[["Подрібнення мармуру",0],["Охолодження розчину",1],["Збільшення тиску над розчином",2]],RT)]},
+  {b:0,p:2,t:"n",v:[
+    N("При підвищенні температури від 20 °C до 50 °C швидкість реакції зросла у 8 разів. Обчисліть різницю температур ΔT та температурний коефіцієнт γ.", [{lbl:"1) Різниця температур ΔT (°C):",a:30},{lbl:"2) Температурний коефіцієнт реакції γ:",a:2}]),
+    N("При підвищенні температури від 30 °C до 60 °C швидкість реакції зросла у 27 разів. Обчисліть різницю температур ΔT та температурний коефіцієнт γ.", [{lbl:"1) Різниця температур ΔT (°C):",a:30},{lbl:"2) Температурний коефіцієнт реакції γ:",a:3}]),
+    N("При підвищенні температури від 10 °C до 50 °C швидкість реакції зросла у 16 разів. Обчисліть різницю температур ΔT та температурний коефіцієнт γ.", [{lbl:"1) Різниця температур ΔT (°C):",a:40},{lbl:"2) Температурний коефіцієнт реакції γ:",a:2}])
+  ]},
+  {b:0,p:1.5,t:"m",v:[S("Які твердження про каталізатор правильні? (кілька)",["Знижує енергію активації","Зміщує хімічну рівновагу","Прискорює пряму і зворотну реакції однаково","Повністю витрачається"],[0,2]),S("Які твердження правильні? (кілька)",["Ефективні зіткнення — ті, що ведуть до реакції","Енергія активації залежить від концентрації","Нагрівання збільшує частку активних молекул","Інгібітор прискорює реакцію"],[0,2])]},
+  {b:1,p:2,t:"n",v:[
+    N("A + 2B ⇌ C. Рівноважні [A]=0,2; [B]=0,5; [C]=0,4 моль/л. Обчисліть [B]² та константу рівноваги Kc.", [{lbl:"1) Значення [B]² у знаменнику:",a:0.25},{lbl:"2) Константа рівноваги Kc:",a:8}]),
+    N("A + 2B ⇌ C. Рівноважні [A]=0,1; [B]=0,2; [C]=0,08 моль/л. Обчисліть знаменник ([A]·[B]²) та константу Kc.", [{lbl:"1) Значення ([A]·[B]²):",a:0.004},{lbl:"2) Константа рівноваги Kc:",a:20}]),
+    N("A + 2B ⇌ C. Рівноважні [A]=0,5; [B]=0,2; [C]=0,2 моль/л. Обчисліть знаменник ([A]·[B]²) та константу Kc.", [{lbl:"1) Значення ([A]·[B]²):",a:0.02},{lbl:"2) Константа рівноваги Kc:",a:10}])
+  ]},
+  {b:1,p:2.5,t:"n",v:[
+    N("2SO₂ + O₂ ⇌ 2SO₃. Початкові [SO₂]=0,8; [O₂]=0,5 моль/л. Прореагувало 50 % SO₂. Знайдіть Δ[SO₂] та рівноважну [O₂].", [{lbl:"1) Концентрація SO₂, що прореагувала (моль/л):",a:0.4},{lbl:"2) Рівноважна концентрація [O₂] (моль/л):",a:0.3}]),
+    N("2SO₂ + O₂ ⇌ 2SO₃. Початкові [SO₂]=0,8; [O₂]=0,5 моль/л. Прореагувало 75 % SO₂. Знайдіть Δ[O₂] та рівноважну [O₂].", [{lbl:"1) Концентрація O₂, що вступила в реакцію (моль/л):",a:0.3},{lbl:"2) Рівноважна концентрація [O₂] (моль/л):",a:0.2}]),
+    N("2SO₂ + O₂ ⇌ 2SO₃. Початкові [SO₂]=1,0; [O₂]=0,6 моль/л. Прореагувало 60 % SO₂. Знайдіть Δ[SO₂] та рівноважну [O₂].", [{lbl:"1) Концентрація SO₂, що прореагувала (моль/л):",a:0.6},{lbl:"2) Рівноважна концентрація [O₂] (моль/л):",a:0.3}])
+  ]},
+  {b:1,p:2.5,t:"x",v:[X("2SO₂ + O₂ ⇌ 2SO₃ + Q. Куди зміститься рівновага?",[["Підвищення тиску",0],["Підвищення температури",1],["Введення каталізатора",2],["Додавання O₂",0]],SH),X("N₂O₄ ⇌ 2NO₂ − Q. Куди зміститься рівновага?",[["Підвищення температури",0],["Підвищення тиску",1],["Додавання NO₂",1],["Введення каталізатора",2]],SH)]},
+  {b:1,p:1.5,t:"s",v:[S("Як змістити рівновагу 2NO + O₂ ⇌ 2NO₂ + Q у бік продукту?",["Підвищити тиск і знизити температуру","Знизити тиск і підвищити температуру","Підвищити температуру й тиск","Додати каталізатор"],0),S("Як збільшити вихід NO₂ у реакції N₂O₄ ⇌ 2NO₂ − Q?",["Підвищити тиск, знизити T","Знизити тиск, знизити T","Підвищити T і знизити тиск","Додати N₂O₄ і охолодити"],2),S("Як збільшити вихід CH₃OH: CO + 2H₂ ⇌ CH₃OH + Q?",["Знизити тиск і підвищити T","Підвищити тиск і знизити T","Підвищити T і тиск","Видалити каталізатор"],1)]},
+  {b:1,p:1.5,t:"s",v:[S("Kc реакції зростає при нагріванні. Яка це реакція?",["Екзотермічна","Ендотермічна","Необоротна","Каталітична"],1),S("Kc реакції зменшується при нагріванні. Яка це реакція?",["Екзотермічна","Ендотермічна","Необоротна","Каталітична"],0)]},
+  {b:1,p:1.5,t:"m",v:[S("У яких системах зміна тиску НЕ зміщує рівновагу? (кілька)",["H₂ + I₂ ⇌ 2HI","N₂ + 3H₂ ⇌ 2NH₃","CaCO₃(тв) ⇌ CaO(тв) + CO₂","N₂ + O₂ ⇌ 2NO"],[0,3]),S("У яких системах підвищення тиску зміщує рівновагу вправо? (кілька)",["2NO + O₂ ⇌ 2NO₂","H₂ + Cl₂ ⇌ 2HCl","N₂ + 3H₂ ⇌ 2NH₃","N₂O₄ ⇌ 2NO₂"],[0,2])]},
+  {b:1,p:2,t:"x",v:[X("Лабораторна: Fe³⁺ + 3SCN⁻ ⇌ Fe(SCN)₃ (червоний). Як зміниться забарвлення?",[["Додали розчин FeCl₃",0],["Додали NaF (зв’язує Fe³⁺)",1],["Додали KCl",2]],CL),X("Лабораторна: Fe³⁺ + 3SCN⁻ ⇌ Fe(SCN)₃ (червоний). Як зміниться забарвлення?",[["Додали KSCN",0],["Розбавили водою",1],["Додали каталізатор",2]],CL)]},
+  {b:2,p:1.5,t:"s",v:[S("Яка пара розчинів НЕ дає реакції обміну?",["Na₂SO₄ + BaCl₂","K₂CO₃ + HNO₃","KCl + NaNO₃","CuSO₄ + NaOH"],2),S("Яка пара розчинів НЕ дає реакції обміну?",["NaCl + KNO₃","AgNO₃ + HCl","Na₂S + H₂SO₄","FeCl₃ + KOH"],0)]},
+  {b:2,p:2,t:"n",v:[
+    N("Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂↑. Знайдіть суму коефіцієнтів у молекулярному та у повній йонній формах.", [{lbl:"1) Сума коефіцієнтів у молекулярному рівнянні:",a:7},{lbl:"2) Сума коефіцієнтів у повній йонній формі:",a:13}]),
+    N("AgNO₃ + NaCl → AgCl↓ + NaNO₃. Знайдіть суму коефіцієнтів у молекулярному та повній йонній формах.", [{lbl:"1) Сума коефіцієнтів у молекулярному рівнянні:",a:4},{lbl:"2) Сума коефіцієнтів у повній йонній формі:",a:7}]),
+    N("FeCl₃ + 3NaOH → Fe(OH)₃↓ + 3NaCl. Знайдіть суму коефіцієнтів у молекулярному та повній йонній формах.", [{lbl:"1) Сума коефіцієнтів у молекулярному рівнянні:",a:8},{lbl:"2) Сума коефіцієнтів у повній йонній формі:",a:17}])
+  ]},
+  {b:2,p:1.5,t:"s",v:[S("Скороченому рівнянню Zn²⁺ + 2OH⁻ = Zn(OH)₂↓ відповідає реакція:",["ZnSO₄ + 2NaOH","ZnCO₃ + 2NaOH","Zn + 2H₂O","Zn(OH)₂ + 2HCl"],0),S("Скороченому рівнянню CO₃²⁻ + 2H⁺ = H₂O + CO₂↑ відповідає реакція:",["CaCO₃ + 2HCl","K₂CO₃ + 2HCl","BaCO₃ + H₂SO₄","Na₂SO₃ + HCl"],1)]},
+  {b:2,p:2,t:"n",v:[
+    N("До розчину з 20,8 г BaCl₂ додали надлишок Na₂SO₄. (M(BaCl₂)=208, M(BaSO₄)=233). Обчисліть n(BaCl₂) та масу осаду m(BaSO₄).", [{lbl:"1) Кількість речовини BaCl₂ (моль):",a:0.1},{lbl:"2) Маса осаду BaSO₄ (г):",a:23.3}]),
+    N("До розчину з 17 г AgNO₃ додали надлишок HCl. (M(AgNO₃)=170, M(AgCl)=143.5). Обчисліть n(AgNO₃) та масу осаду m(AgCl).", [{lbl:"1) Кількість речовини AgNO₃ (моль):",a:0.1},{lbl:"2) Маса осаду AgCl (г):",a:14.35}]),
+    N("До розчину з 16 г CuSO₄ додали надлишок NaOH. (M(CuSO₄)=160, M(Cu(OH)₂)=98). Обчисліть n(CuSO₄) та масу осаду m(Cu(OH)₂).", [{lbl:"1) Кількість речовини CuSO₄ (моль):",a:0.1},{lbl:"2) Маса осаду Cu(OH)₂ (г):",a:9.8}])
+  ]},
+  {b:2,p:2,t:"n",v:[
+    N("Na₂CO₃ масою 10,6 г обробили надлишком HCl. (M(Na₂CO₃)=106). Знайдіть n(Na₂CO₃) та об'єм CO₂ (н.у., л).", [{lbl:"1) Кількість речовини Na₂CO₃ (моль):",a:0.1},{lbl:"2) Об’єм CO₂ за н. у. (л):",a:2.24}]),
+    N("CaCO₃ масою 20 г обробили надлишком HCl. (M(CaCO₃)=100). Знайдіть n(CaCO₃) та об'єм CO₂ (н.у., л).", [{lbl:"1) Кількість речовини CaCO₃ (моль):",a:0.2},{lbl:"2) Об’єм CO₂ за н. у. (л):",a:4.48}]),
+    N("FeS масою 26,4 г обробили надлишком HCl. (M(FeS)=88). Знайдіть n(FeS) та об'єм H₂S (н.у., л).", [{lbl:"1) Кількість речовини FeS (моль):",a:0.3},{lbl:"2) Об’єм H₂S за н. у. (л):",a:6.72}])
+  ]},
+  {b:2,p:1.5,t:"m",v:[S("Які речовини — сильні електроліти? (кілька)",["HNO₃","CH₃COOH","Ba(OH)₂","H₂CO₃"],[0,2]),S("Які речовини — слабкі електроліти? (кілька)",["H₂S","KOH","NH₃·H₂O","HCl"],[0,2])]},
+  {b:2,p:2,t:"n",v:[
+    N("Розчин HCl, c = 0,001 моль/л. Знайдіть [H⁺] у вигляді 10^-x та підсумковий pH.", [{lbl:"1) Показник степеня [H⁺] = 10^(−x), х дорівнює:",a:3},{lbl:"2) Значення pH розчину:",a:3}]),
+    N("Розчин NaOH, c = 0,01 моль/л. Обчисліть pOH та підсумковий pH розчину.", [{lbl:"1) Значення pOH розчину:",a:2},{lbl:"2) Значення pH розчину:",a:12}]),
+    N("Розчин Ba(OH)₂, c = 0,005 моль/л (повна дисоціація). Знайдіть [OH⁻] та значення pH.", [{lbl:"1) Концентрація йонiв [OH⁻] (моль/л):",a:0.01},{lbl:"2) Значення pH розчину:",a:12}]),
+    N("Розчин H₂SO₄, c = 0,005 моль/л (повна дисоціація). Знайдіть [H⁺] та значення pH.", [{lbl:"1) Концентрація йонiв [H⁺] (моль/л):",a:0.01},{lbl:"2) Значення pH розчину:",a:2}])
+  ]},
+  {b:3,p:3,t:"x",v:[X("Визначте гідроліз і середовище розчину солі:",[["NaCl",0],["Na₂CO₃",2],["NH₄Cl",1],["CuSO₄",1]],HY),X("Визначте гідроліз і середовище розчину солі:",[["K₂SO₄",0],["K₂S",2],["ZnCl₂",1],["CH₃COONa",2]],HY)]},
+  {b:3,p:1.5,t:"s",v:[S("Яка сіль гідролізує і за катіоном, і за аніоном (повністю, необоротно)?",["NaCl","K₂CO₃","Al₂S₃","NH₄Cl"],2),S("Яка сіль гідролізує і за катіоном, і за аніоном (повністю, необоротно)?",["Cr₂S₃","Na₂SO₄","ZnSO₄","K₃PO₄"],0)]},
+  {b:3,p:1.5,t:"s",v:[S("Скорочене йонне рівняння 1-ї стадії гідролізу Na₂CO₃:",["CO₃²⁻ + H₂O ⇌ HCO₃⁻ + OH⁻","Na⁺ + H₂O ⇌ NaOH + H⁺","CO₃²⁻ + 2H₂O ⇌ H₂CO₃ + 2OH⁻","CO₃²⁻ + H⁺ ⇌ HCO₃⁻"],0),S("Скорочене йонне рівняння 1-ї стадії гідролізу ZnCl₂:",["Zn²⁺ + H₂O ⇌ ZnOH⁺ + H⁺","Cl⁻ + H₂O ⇌ HCl + OH⁻","Zn²⁺ + 2H₂O ⇌ Zn(OH)₂ + 2H⁺","Zn²⁺ + OH⁻ ⇌ ZnOH⁺"],0)]},
+  {b:3,p:2,t:"m",v:[S("Як посилити гідроліз FeCl₃? (кілька)",["Нагріти","Розбавити водою","Додати HCl","Додати NaOH"],[0,1,3]),S("Як пригнітити (послабити) гідроліз ZnCl₂? (кілька)",["Підкислити (HCl)","Нагріти","Розбавити","Охолодити"],[0,3])]},
+  {b:3,p:1.5,t:"s",v:[S("Лабораторна: Na₂CO₃ + фенолфталеїн. Забарвлення і чому?",["Малиновий — лужне (гідроліз за аніоном)","Безбарвний — нейтральне","Малиновий — кисле","Безбарвний — лужне"],0),S("Лабораторна: Al₂(SO₄)₃ + метилоранж. Забарвлення і чому?",["Жовтий — лужне","Рожевий — кисле (гідроліз за катіоном)","Оранжевий — нейтральне","Рожевий — лужне"],1),S("Лабораторна: NaCl + лакмус. Забарвлення?",["Червоний","Синій","Фіолетовий (не змінюється) — гідролізу немає","Жовтий"],2)]},
+  {b:3,p:2,t:"n",v:[
+    N("Скільки з наведених розчинів мають pH < 7: NaNO₃, CuSO₄, K₂S, NH₄NO₃, FeCl₃, Na₂SO₄?", [{lbl:"1) Кількість кислих розчинів (pH < 7):",a:3},{lbl:"2) Вкажіть числову кількість ще раз для підтвердження:",a:3}]),
+    N("Скільки з наведених розчинів мають pH > 7: K₂CO₃, KCl, Na₃PO₄, ZnSO₄, CH₃COOK, NaBr?", [{lbl:"1) Кількість лужних розчинів (pH > 7):",a:3},{lbl:"2) Вкажіть числову кількість ще раз для підтвердження:",a:3}])
+  ]}
+  ];
+
+  const MAX=T.reduce((s,t)=>s+t.p,0), TOT=60*60;
+  let V=1, cur=0, A={}, foc=0, U={}, run=false, end=0, iv;
+
+  const tk=i=>T[i].v[(V+i)%T[i].v.length];
+
+  /* Перемішування варіантів відповідей: порядок стабільний протягом сесії студента,
+     у відповідях зберігаються ОРИГІНАЛЬНІ індекси, тому перевірка не змінюється */
+  let seed=1, P={};
+  const rng=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+  function shuf(n,salt){
+    const r=rng(seed+salt*7919), a=[...Array(n).keys()];
+    let guard=0;
+    do{
+      for(let i=n-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+    }while(n>1 && a.every((v,i)=>v===i) && ++guard<20);   // не лишаємо вихідний порядок
+    return a;
+  }
+  const perm=i=>{
+    if(!P[i]){
+      const k=tk(i);
+      P[i]={o:k.o?shuf(k.o.length,i*2+1):[], r:k.r?shuf(k.r.length,i*2+2):[]};
+    }
+    return P[i];
+  };
+  const done=i=>{
+    const a=A[i];
+    if(a===undefined||a==="")return false;
+    if(Array.isArray(a))return a.length>0;
+    if(T[i].t=="x")return Object.keys(a).length==tk(i).r.length;
+    if(T[i].t=="n")return typeof a==='object' && Object.keys(a).length==tk(i).steps.length;
+    return true;
+  };
+
+  function startExam(){
+    const n = $("name").value.trim();
+    const g = $("group").value.trim();
+    if(!n || !g){
+      alert("Будь ласка, введіть прізвище та групу");
+      return;
+    }
+    U = {n, g};
+    let s = +$("vsel").value;
+    if(!s){
+      let h = 0; 
+      for(let idx = 0; idx < n.length; idx++){
+        h = (h * 31 + n.charCodeAt(idx)) % 1000;
+      }
+      s = (h % 25) + 1;
+    }
+    V = s;
+    seed = 0;
+    for(const ch of (n+"|"+g+"|"+V)) seed = (seed*31 + ch.charCodeAt(0)) | 0;
+    P = {};
+    $("login").classList.add("hid");
+    $("exam").classList.remove("hid");
+    $("tm").classList.remove("hid");
+    $("vtag").textContent = n + " · " + g + " · Варіант " + V;
+    run = true; 
+    end = Date.now() + TOT * 1000;
+    tick(); 
+    iv = setInterval(tick, 1000);
+    draw();
+  }
+
+  function tick(){
+    const l=Math.max(0,Math.round((end-Date.now())/1000));
+    $("tm").textContent="⏱ "+String(Math.floor(l/60)).padStart(2,"0")+":"+String(l%60).padStart(2,"0");
+    $("tm").style.color=l<300?"var(--bad)":"var(--ac)";
+    if(!l&&run) finishExam();
+  }
+
+  function draw(){
+    const filled=T.filter((_,i)=>done(i)).length;
+    $("cnt").textContent="Заповнено: "+filled+" / "+T.length;
+    
+    let stHtml = "";
+    for(let i=0; i<T.length; i++){
+      stHtml += `<button type="button" class="${i==cur?'cur':done(i)?'done':''}" data-step="${i}">${i+1}</button>`;
+    }
+    $("stepper").innerHTML = stHtml;
+    
+    Array.from($("stepper").querySelectorAll('button')).forEach(btn => {
+      btn.addEventListener('click', (evt) => {
+        cur = +evt.currentTarget.getAttribute('data-step');
+        draw();
+      });
+    });
+
+    const t=T[cur], k=tk(cur);
+    let h=`<div class="mu" style="font-size:.75rem">${BL[t.b]}</div><div class="q">Завдання ${cur+1}. ${k.q||k.h} <span class="pts">(${t.p} б.)</span></div>`;
+    
+    if(t.t=="s"||t.t=="m"){
+      const mult=t.t=="m";
+      h+=perm(cur).o.map(j=>{
+        const o=k.o[j];
+        const on=mult?(A[cur]||[]).includes(j):A[cur]===j;
+        return `<label class="opt ${on?'sel':''}" style="font-weight:400"><input type="${mult?'checkbox':'radio'}" ${on?'checked':''} data-opt="${j}"><span>${o}</span></label>`;
+      }).join("");
+    }
+    
+    if(t.t=="n"){
+    A[cur] = A[cur] || {};
+    k.steps.forEach((st, idx)=>{
+      const val = A[cur][idx] !== undefined ? A[cur][idx] : '';
+      h += '<div class="step-card"><label>' + String(st.lbl).replace(/</g,"&lt;") + '</label><input type="text" inputmode="decimal" placeholder="Введіть число..." value="' + String(val).replace(/"/g,"&quot;") + '" data-stepidx="' + idx + '"></div>';
+    });
+  }
+    
+    if(t.t=="x"){
+      const pr=perm(cur);
+      h+=pr.r.map(j=>{
+        const r=k.r[j];
+        return `<div class="row"><b>${r[0]}</b><select data-row="${j}"><option value="">— оберіть —</option>${pr.o.map(x=>`<option value="${x}" ${A[cur]&&A[cur][j]===x?'selected':''}>${k.o[x]}</option>`).join("")}</select></div>`;
+      }).join("");
+    }
+    
+    $("task").innerHTML=h;
+    
+    // Прив'язка подій
+    if(t.t=="s"||t.t=="m"){
+      Array.from($("task").querySelectorAll('input')).forEach(inp => {
+        inp.addEventListener('change', (evt) => {
+          const j = +evt.target.getAttribute('data-opt');
+          pickOpt(j);
+        });
+      });
+    }
+    if(t.t=="n"){
+      Array.from($("task").querySelectorAll('input')).forEach(inp => {
+        inp.addEventListener('input', (evt) => {
+          const idx = +evt.target.getAttribute('data-stepidx');
+          A[cur][idx] = evt.target.value;
+          updateCnt();
+        });
+      });
+    }
+    if(t.t=="x"){
+      Array.from($("task").querySelectorAll('select')).forEach(sel => {
+        sel.addEventListener('change', (evt) => {
+          const j = +evt.target.getAttribute('data-row');
+          A[cur] = A[cur] || {};
+          if(evt.target.value==="") delete A[cur][j]; else A[cur][j] = +evt.target.value;
+          updateCnt();
+        });
+      });
+    }
+
+    $("prev").disabled=!cur;
+    $("next").classList.toggle("hid",cur==T.length-1);
+    $("fin").classList.toggle("hid",cur!=T.length-1);
+  }
+
+  function updateCnt(){
+    const filled=T.filter((_,i)=>done(i)).length;
+    $("cnt").textContent="Заповнено: "+filled+" / "+T.length;
+    if($("stepper").children[cur]) $("stepper").children[cur].className="cur";
+  }
+
+  function pickOpt(j){
+    if(T[cur].t=="m"){
+      const a=A[cur]||[];
+      A[cur]=a.includes(j)?a.filter(x=>x!=j):[...a,j];
+    } else {
+      A[cur]=j;
+    }
+    draw();
+  }
+
+  function go(d){
+    cur=Math.min(T.length-1,Math.max(0,cur+d));
+    draw();
+  }
+
+  function score(i){
+    const t=T[i], k=tk(i), a=A[i];
+    if(a===undefined) return 0;
+    if(t.t=="s") return a===k.a?t.p:0;
+    if(t.t=="n"){
+      let pts = 0;
+      const stepWeight = t.p / k.steps.length;
+      k.steps.forEach((st, idx)=>{
+        const val = parseFloat(String(a[idx]||'').replace(",","."));
+        if(!isNaN(val) && Math.abs(val - st.a) <= 0.015 * Math.abs(st.a) + 1e-9){
+          pts += stepWeight;
+        }
+      });
+      return pts;
+    }
+    if(t.t=="m"){ const r=a.filter(x=>k.a.includes(x)).length-a.filter(x=>!k.a.includes(x)).length; return Math.max(0,r/k.a.length)*t.p; }
+    return k.r.filter((r,j)=>a[j]===r[1]).length/k.r.length*t.p;
+  }
+
+  const f=x=>(Math.round(x*10)/10).toString().replace(".",",");
+
+  function get12Grade(pct){
+    if(pct < 15) return 1;
+    if(pct < 25) return 2;
+    if(pct < 35) return 3;
+    if(pct < 45) return 4;
+    if(pct < 55) return 5;
+    if(pct < 65) return 6;
+    if(pct < 75) return 7;
+    if(pct < 83) return 8;
+    if(pct < 90) return 9;
+    if(pct < 96) return 10;
+    if(pct < 99) return 11;
+    return 12;
+  }
+
+  function finishExam(){
+    if(!run) return;
+    run=false; clearInterval(iv);
+    $("cm").classList.add("hid"); $("sm").classList.add("hid"); $("sol").classList.add("hid");
+    $("exam").classList.add("hid"); $("tm").classList.add("hid");
+    $("rep").classList.remove("hid");
+    
+    const sc=T.map((_,i)=>score(i)), raw=sc.reduce((a,b)=>a+b,0);
+    const pct=(raw/MAX)*100;
+    const baseGrade=get12Grade(pct);
+    const fin=Math.max(1,Math.min(12,baseGrade-.5*foc));
+    const used=Math.min(TOT,Math.round((Date.now()-(end-TOT*1000))/1000));
+    
+    const bs=BL.map((n,b)=>{let g=0,m=0;T.forEach((t,i)=>{if(t.b==b){g+=sc[i];m+=t.p}});return `<div class="bl"><span>${n}</span><b>${f(g)} / ${f(m)} б. (${Math.round(g/m*100)}%)</b></div>`}).join("");
+    
+    const det=T.map((t,i)=>{
+      const c=sc[i]>=t.p-1e-9?"ok":sc[i]>0?"part":"no";
+      const k=tk(i);
+      let solTxt="";
+      if(t.t=="n"){
+        let stepsRes = k.steps.map((st, idx)=>{
+          const usr = (A[i] && A[i][idx] !== undefined) ? A[i][idx] : '—';
+          return `• ${st.lbl} Введено: <b>${e(usr)}</b> | Еталон: <b>${st.a}</b>`;
+        }).join("<br>");
+        solTxt=`<div style="margin-top:.3rem;font-size:.8rem">${stepsRes}</div>`;
+      }
+      return `<div class="res ${c}"><b>Завдання ${i+1}</b> <span class="mu">(${BL[t.b]})</span> — ${f(sc[i])} / ${t.p} б. ${c=="ok"?"✔ вірно":c=="part"?"◐ частково":"✘ невірно"}${solTxt}</div>`;
+    }).join("");
+    
+    $("meta").innerHTML=`Студент: <b>${e(U.n)}</b> · Група: <b>${e(U.g)}</b> · Варіант: <b>${V}</b> · Час: ${Math.floor(used/60)} хв ${used%60} с`;
+    $("grade").textContent=f(fin)+" / 12 балів";
+    $("calc").innerHTML=`Первинні бали: ${f(raw)} з ${f(MAX)} (${Math.round(pct)}%) → Базова оцінка: ${baseGrade} з 12<br>Втрат фокусу: ${foc} → Штраф: −${f(.5*foc)} б.`;
+    $("det").innerHTML="<h3>Результат за темами</h3>"+bs+"<h3>Аналіз завдань</h3>"+det;
+  }
+
+  /* Таблиця розчинності */
+  const SA=["OH⁻","F⁻","Cl⁻","Br⁻","I⁻","S²⁻","SO₃²⁻","SO₄²⁻","NO₃⁻","PO₄³⁻","CO₃²⁻","SiO₃²⁻","CH₃COO⁻"];
+  const SC=["H⁺","Li⁺","K⁺","Na⁺","NH₄⁺","Ba²⁺","Ca²⁺","Mg²⁺","Sr²⁺","Al³⁺","Cr³⁺","Fe²⁺","Fe³⁺","Ni²⁺","Co²⁺","Mn²⁺","Zn²⁺","Ag⁺","Hg²⁺","Pb²⁺","Sn²⁺","Cu²⁺"];
+  const SR={ // рядки — аніони, значення — по катіонах у порядку SC
+    "OH⁻":"Р Р Р Р Р Р М Н М Н Н Н Н Н Н Н Н — — Н Н Н",
+    "F⁻":"Р М Р Р Р М Н Н М М М М М Р Р М Р Р — М Р М",
+    "Cl⁻":"Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Н Р М Р Р",
+    "Br⁻":"Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Н М М Р Р",
+    "I⁻":"Р Р Р Р Р Р Р Р Р Р Р Р — Р Р Р Р Н Н Н М —",
+    "S²⁻":"Р Р Р Р Р Р Р — Р — — Н — Н Н Н Н Н Н Н Н Н",
+    "SO₃²⁻":"Р Р Р Р Р Н Н М Н — — Н — Н Н Н Н Н — Н — —",
+    "SO₄²⁻":"Р Р Р Р Р Н М Р Н Р Р Р Р Р Р Р Р М — Н Р Р",
+    "NO₃⁻":"Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р — Р",
+    "PO₄³⁻":"Р Н Р Р Р Н Н Н Н Н Н Н Н Н Н Н Н Н Н Н Н Н",
+    "CO₃²⁻":"Р М Р Р Р Н Н Н Н — — Н — Н Н Н Н Н — Н — —",
+    "SiO₃²⁻":"Н Н Р Р — Н Н Н Н Н — Н Н — Н Н Н Н — Н — Н",
+    "CH₃COO⁻":"Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р Р М Р Р — Р"
+  };
+  (function buildSol(){
+    const cls={"Р":"r","М":"m","Н":"n","—":"x"};
+    const rows=SA.map(a=>SR[a].split(" "));
+    let h="<thead><tr><th>Катіон \\ Аніон</th>"+SA.map(a=>`<th>${a}</th>`).join("")+"</tr></thead><tbody>";
+    SC.forEach((c,ci)=>{
+      h+=`<tr><th>${c}</th>`+SA.map((a,ai)=>{const v=rows[ai][ci];return `<td class="${cls[v]}">${v}</td>`}).join("")+"</tr>";
+    });
+    $("sol-table").innerHTML=h+"</tbody>";
+  })();
+  $("sol-btn").addEventListener("click", ()=>$("sol").classList.remove("hid"));
+  $("sol-close").addEventListener("click", ()=>$("sol").classList.add("hid"));
+  $("sol").addEventListener("click", evt=>{ if(evt.target===$("sol")) $("sol").classList.add("hid"); });
+
+  // Прив'язка кнопок
+  $("start-btn").addEventListener("click", startExam);
+  $("prev").addEventListener("click", ()=>go(-1));
+  $("next").addEventListener("click", ()=>go(1));
+  $("fin").addEventListener("click", ()=>$("cm").classList.remove("hid"));
+  $("cm-cancel").addEventListener("click", ()=>$("cm").classList.add("hid"));
+  $("cm-confirm").addEventListener("click", finishExam);
+  $("sm-btn").addEventListener("click", ()=>$("sm").classList.add("hid"));
+
+  /* Calculator Logic */
+  let calcExpr = "";
+  window.toggleCalc = function(){
+    const w = $("calc-widget");
+    w.classList.toggle("collapsed");
+    $("calc-toggle-icon").textContent = w.classList.contains("collapsed") ? "▲" : "▼";
+  };
+  window.calcInput = function(v){
+    if(calcExpr === "Error") calcExpr = "";
+    calcExpr += v;
+    $("calc-screen").textContent = calcExpr || "0";
+  };
+  window.calcEval = function(){
+    try {
+      if(!calcExpr) return;
+      let res = Function('"use strict";return (' + calcExpr + ')')();
+      if(typeof res === 'number'){
+        res = Math.round(res * 10000) / 10000;
+      }
+      calcExpr = String(res);
+      $("calc-screen").textContent = calcExpr;
+    } catch(err) {
+      calcExpr = "Error";
+      $("calc-screen").textContent = calcExpr;
+    }
+  };
+  window.calcClear = function(){
+    calcExpr = "";
+    $("calc-screen").textContent = "0";
+  };
+  $("calc-head-btn").addEventListener("click", window.toggleCalc);
+
+  window.addEventListener("blur",()=>{if(run){foc++;$("sm").classList.remove("hid")}});
+
+  /* Захист від копіювання та гарячих клавіш */
+  document.addEventListener('contextmenu', evt => evt.preventDefault());
+  document.addEventListener('keydown', function(evt) {
+    if (
+      (evt.ctrlKey && (evt.key === 'c' || evt.key === 'С' || evt.key === 'a' || evt.key === 'А' || evt.key === 'u' || evt.key === 'У')) ||
+      evt.key === 'F12' ||
+      (evt.ctrlKey && evt.shiftKey && (evt.key === 'I' || evt.key === 'i' || evt.key === 'Ш' || evt.key === 'ш'))
+    ) {
+      evt.preventDefault();
+    }
+  });
+});
+</script>
+</body>
+</html>
